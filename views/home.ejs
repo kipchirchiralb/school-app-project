@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css" />
+    <style>
+      h1 {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("_header.ejs") %>
+
+    <h1>Home page</h1>
+
+    <h2>Teacher Atttendance</h2>
+    <table>
+      <tr>
+        <th>Teacher Name</th>
+        <th>Phone</th>
+        <th>Role</th>
+      </tr>
+      <% teachers.forEach(t=>{ %>
+        <tr>
+          <td> <%= t.full_name%> </td>
+          <td> <%= t.phone%> </td>
+          <td> <%= t.role%> </td>
+        </tr>
+      <% }) %>
+    </table>
+
+    <h2>Student Atttendance</h2>
+    <table>
+      <tr>
+        <th>Reg No</th>
+        <th>Student Name</th>
+        <th>Class</th>
+      </tr>
+      <% for(let index = 0; index<students.length; index++){ %>
+        <tr>
+          <td><%= students[index].reg_no %></td>
+          <td><%= students[index].fullname %></td>
+          <td><%= students[index].class %></td>
+        </tr>
+      <%}%>
+    </table>
+
+    <h2>4 Teachers Present</h2>
+
+    <!-- <h2><%= //numberOfStudents %> Students</h2> -->
+
+    <!-- <h2><%=// presentStudents %> Present Students</h2> -->
+
+    <!-- 7 teachers present -->
+    <!-- 20 students present -->
+
+    <!-- section absentees -- students and teachers -->
+
+    <!-- other pages -->
+    <!-- Attendance page  -->
+    <!-- Permisions page  -->
+  </body>
+</html>
