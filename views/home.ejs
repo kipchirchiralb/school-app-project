@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="index.css" />
     <style>
       h1 {
         color: red;
@@ -12,11 +13,18 @@
     </style>
   </head>
   <body>
+    <div class="main-container">
     <%- include("_header.ejs") %>
 
-    <h1>Home page</h1>
+    <% if(locals.user){ %>
+      <h2 class="main-h">Welcome <%= user.full_name %></h2>
+      <% }else{ %>
+      <h2 class="main-h">Welcome to SAMS</h2>
+      <%}%>
 
-    <h2>Teacher Atttendance</h2>
+      <div class="attendance">
+        <div class="t-a">
+          <h2>Teacher Atttendance</h2>
     <table>
       <tr>
         <th>Teacher Name</th>
@@ -32,23 +40,28 @@
       <% }) %>
     </table>
 
-    <h2>Student Atttendance</h2>
-    <table>
-      <tr>
-        <th>Reg No</th>
-        <th>Student Name</th>
-        <th>Class</th>
-      </tr>
-      <% for(let index = 0; index<students.length; index++){ %>
-        <tr>
-          <td><%= students[index].reg_no %></td>
-          <td><%= students[index].fullname %></td>
-          <td><%= students[index].class %></td>
-        </tr>
-      <%}%>
-    </table>
+        </div>
+        <div class="s-a">
+          <h2>Student Atttendance</h2>
+          <table>
+            <tr>
+              <th>Reg No</th>
+              <th>Student Name</th>
+              <th>Class</th>
+            </tr>
+            <% for(let index = 0; index<students.length; index++){ %>
+              <tr>
+                <td><%= students[index].reg_no %></td>
+                <td><%= students[index].fullname %></td>
+                <td><%= students[index].class %></td>
+              </tr>
+            <%}%>
+          </table>
+        </div>
+      </div>
+    
+  
 
-    <h2>4 Teachers Present</h2>
 
     <!-- <h2><%= //numberOfStudents %> Students</h2> -->
 
@@ -62,5 +75,6 @@
     <!-- other pages -->
     <!-- Attendance page  -->
     <!-- Permisions page  -->
+    </div>
   </body>
 </html>

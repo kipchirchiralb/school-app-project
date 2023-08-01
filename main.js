@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require("express-session");
 const mysql = require("mysql");
 const conn = mysql.createConnection({
   host: "localhost",
@@ -8,11 +9,26 @@ const conn = mysql.createConnection({
 });
 
 const app = express();
-app.use(express.static("public"));
+app.use(
+  session({
+    secret: "secret word",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 // middleware
+app.use(express.static("public")); // static files middlware
 app.use(express.urlencoded({ extended: false })); // supply req.body object with form data
 // server static files in expres
 const port = process.env.port || 3003;
+
+function midfunc(req, res, next) {
+  console.log(req.path);
+  console.log("I am a middleware function!!");
+  // logic -- e.g. authorization
+  next();
+}
+// app.use(midfunc);
 
 app.get("/", (req, res) => {
   conn.query("SELECT * FROM students", (sqlerr1, students) => {
@@ -22,9 +38,19 @@ app.get("/", (req, res) => {
         if (sqlerr2) {
           res.send("Database Error Occured");
         } else {
-          console.log(students);
-          console.log(teachers);
-          res.render("home.ejs", { students: students, teachers: teachers });
+          // console.log(students); // JSON
+          // console.log(teachers);
+          if (req.session.staff?.role === "principal") {
+            res.render("admin.ejs");
+          } else if (req.session.staff) {
+            res.render("home.ejs", {
+              students: students,
+              teachers: teachers,
+              user: req.session.staff,
+            });
+          } else {
+            res.render("home.ejs", { students: students, teachers: teachers });
+          }
         }
       });
     } else {
@@ -85,6 +111,43 @@ app.post("/addStudent", (req, res) => {
       }
     }
   );
+});
+
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
+
+app.post("/login", (reqe, rese) => {
+  // loggin in login -- authenticate
+  // recieve passkey and tsc no -- req.body
+  // console.log(reqe.body);
+  // look for the clients tsc no in the db -- reqe.body.tsc
+  // encryptions
+  conn.query(
+    "SELECT * FROM teachers WHERE tsc_no = ?",
+    [Number(reqe.body.tsc)],
+    (sqlerrr, dbresult) => {
+      if (sqlerrr) {
+        rese.send("Database Error Occured");
+      } else {
+        console.log(dbresult);
+        if (dbresult.length < 1) {
+          rese.send("User with tsc " + reqe.body.tsc + " does not exist");
+        } else {
+          console.log(dbresult); // tsc no exists in the db --
+          if (reqe.body.passkey == dbresult[0].passkey) {
+            // create a session
+            reqe.session.staff = dbresult[0]; //creating a session
+            rese.redirect("/");
+          } else {
+            rese.send("Incorrect Password");
+          }
+        }
+      }
+    }
+  );
+  // if it exists, compare saved passkey with client's passkey
+  // if they math-- authorize then to access secure pages(create a session for them)
 });
 
 // newStudent
