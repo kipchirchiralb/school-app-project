@@ -7,6 +7,9 @@ body {
 img {
   width: 300px;
 }
+h1 {
+  color: red;
+}
 header {
   display: flex;
   justify-content: space-between;
@@ -21,6 +24,7 @@ header nav a {
 }
 .main-h {
   text-align: center;
+  color: rgb(209, 13, 13);
 }
 .main-container {
   max-width: 920px;
@@ -49,4 +53,12 @@ th {
 
 tr:nth-child(even) {
   background-color: #dddddd;
+}
+
+form {
+  max-width: 300px;
+  margin: 0 auto;
+  background-color: rgba(240, 248, 255, 0.4);
+  border-radius: 20px;
+  padding: 25px;
 }
